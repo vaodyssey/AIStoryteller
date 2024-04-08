@@ -1,0 +1,37 @@
+﻿@using AIStoryteller_Repository.Services
+@page "/upload"
+@rendermode InteractiveServer
+@inject  IPdfService pdfService
+
+<PageTitle>New Book</PageTitle>
+
+<h1>New Book</h1>
+
+<p role="status">Insert your book here to begin.</p>
+
+<form @onsubmit="OnSubmit">
+    <div class="input-group mb-3">
+        <InputFile class="form-control" OnChange="@OnBookChange" />
+        <button class="btn btn-primary" type="submit" id="uploadButton" disabled="@IsUploadDisabled">
+            <span class="oi oi-cloud-upload" aria-hidden="true"></span> Upload Selected File
+        </button>
+    </div>
+</form>
+
+
+@code {
+    bool IsUploadDisabled = true;
+    private IBrowserFile _selectedFile;
+
+    private async Task OnBookChange(InputFileChangeEventArgs e)
+    {
+        IsUploadDisabled = true;
+        _selectedFile = e.File;
+        if (_selectedFile != null) IsUploadDisabled = false;
+    }
+
+    private async void OnSubmit()
+    {
+        pdfService.SavePdfToDatabase();
+    }
+}
