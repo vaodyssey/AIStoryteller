@@ -1,6 +1,8 @@
-﻿using AIStoryteller_Repository.Services;
+﻿using AIStoryteller_Repository.Migrations;
+using AIStoryteller_Repository.Services;
 using AIStoryteller_Repository.Services.Implementation;
-
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 namespace AIStoryteller.Configs
 {
 
@@ -14,13 +16,13 @@ namespace AIStoryteller.Configs
 
         public static IServiceCollection AddDatabase(this IServiceCollection services)
         {
-            //services.AddDbContext<DummyDbContext>(options => options.UseSqlServer(GetConnectionString()));
+            services.AddDbContext<AIStorytellerDbContext>(options => options.UseSqlServer(GetConnectionString()));
             return services;
         }
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-
             services.AddScoped<IPdfService, PdfService>();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             return services;
         }
 

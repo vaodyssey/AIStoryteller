@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AIStoryteller_Repository.Entities
 {
-    public class Book
+    public class Book:BaseEntity
     {
         public string Name { get; set; }    
         public long Size { get; set; }    

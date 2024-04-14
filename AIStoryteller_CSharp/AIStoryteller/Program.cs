@@ -1,5 +1,7 @@
 using AIStoryteller.Components;
 using AIStoryteller.Configs;
+using AIStoryteller_Repository.Migrations;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +28,10 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+var scope = app.Services.CreateScope();
+var context = scope.ServiceProvider.GetRequiredService<AIStorytellerDbContext>();
+await context.Database.MigrateAsync();
 
 app.UseHttpsRedirection();
 app.UseSession();
