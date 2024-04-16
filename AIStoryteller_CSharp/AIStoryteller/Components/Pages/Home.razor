@@ -6,44 +6,46 @@
 @inject IBookService BookService
 <PageTitle>Home</PageTitle>
 
-<h2>Your Books</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Size</th>
-            <th scope="col">Options</th>
-        </tr>
-    </thead>
-    <tbody>
 
-        @foreach (var book in _books)
-        {
-            _count++;
+<div class="content mb-5 px-4">
+    <h2>Your Books</h2>
+    <table class="table">
+        <thead>
             <tr>
-                <th scope="row">@_count</th>
-                <td>@book.Name</td>
-                <td>@book.Size</td>
-                <td>
-                    <Dropdown ButtonText="Options" class="btn btn-secondary dropdown-toggle"
-                              role="button" id="dropdownMenuButton"
-                              data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <a class="dropdown-item" href="#">Read</a>
-                        <a class="dropdown-item" href="#">Delete</a>
-
-                    </Dropdown>
-
-                </td>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Size</th>
+                <th scope="col">Options</th>
             </tr>
+        </thead>
+        <tbody>
 
-        }
+            @foreach (var book in _books)
+            {
+                _count++;
+                <tr>
+                    <th scope="row">@_count</th>
+                    <td>@book.Name</td>
+                    <td>@book.Size</td>
+                    <td>
+                        <Dropdown ButtonText="Options" class="btn btn-secondary dropdown-toggle"
+                                  role="button" id="dropdownMenuButton"
+                                  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="dropdown-item" href="/book/read">Read</a>
+                            <a class="dropdown-item" href="#">Delete</a>
+
+                        </Dropdown>
+
+                    </td>
+                </tr>
+
+            }
 
 
-    </tbody>
-</table>
-
+        </tbody>
+    </table>
+</div>
 @code{
     private List<BookResponse> _books = new List<BookResponse>();
     private int _count = 0;

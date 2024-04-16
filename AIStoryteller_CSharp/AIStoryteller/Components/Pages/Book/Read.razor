@@ -1,0 +1,37 @@
+﻿@page "/book/read"
+@using AIStoryteller.Components.Elements.Book_Read
+<head>
+    <link rel="stylesheet" href="css/font-awesome/css/fontawesome.min.css" />
+
+</head>
+
+<div class="container vh-100">
+    <div class="row">
+        <div class="col-lg-4 col-sm-4 col-md-4 gx-0">
+            <BookImage></BookImage>
+        </div>
+        <div class="col-lg-8 col-sm-8 col-md-8 gx-2">
+            <div class="container vh-100">
+                <div class="row">
+                    <div class="container general-info-container">
+                        <div class="row px-2">
+                            backButton
+                        </div>
+                        <div class="row">
+                            <BookInfo></BookInfo>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <PageList></PageList>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .general-info-container {
+        background-color: #d8f9ff; /* Custom background color */
+    }
+</style>

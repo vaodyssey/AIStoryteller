@@ -1,0 +1,45 @@
+﻿<div class="container row gx-0">
+    <div class="overflow-auto page-list-row-height page-list-row-height">
+        @for (int index = 1; index <= 275; index++)
+        {
+            <div class="card">
+                <div class="p-4 card-body">
+                    <div class="row">
+                        <div class="col-lg-10 col-md-10 col-sm-10">
+                            <div class="align-items-center row">
+                                <div class="col-lg-2 col-md-2 col-sm-2">
+                                    
+                                    <h2>@index</h2>
+                                    
+                                </div>
+                                <div class="col-lg-10 col-md-10 col-sm-10">
+                                    <div class="candidate-list-content mt-3 mt-lg-0">
+                                        <h5 class="fs-19 mb-0">
+                                            <a class="primary-link" href="/book/read">Page @index</a>
+                                        </h5>
+                                    </div>
+                                </div>                               
+                            </div>
+
+                        </div>
+                        <div class="d-flex align-items-center col-lg-2 col-md-2 col-sm-2">
+
+                            <span class="badge bg-success ms-1">0:00</span>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .page-list-container {
+        background-color: #d8f9ff; /* Custom background color */
+    }
+
+    .page-list-row-height {
+        height:75vh;
+    }
+</style>

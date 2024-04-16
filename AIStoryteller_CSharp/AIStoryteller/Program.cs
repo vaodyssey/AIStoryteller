@@ -15,10 +15,10 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddRepositories();
 builder.Services.AddDatabase();
 builder.Services.AddServices();
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
-});
+//builder.Services.AddSession(options =>
+//{
+//    options.IdleTimeout = TimeSpan.FromMinutes(30);
+//});
 
 
 
@@ -37,7 +37,7 @@ var context = scope.ServiceProvider.GetRequiredService<AIStorytellerDbContext>()
 await context.Database.MigrateAsync();
 
 app.UseHttpsRedirection();
-app.UseSession();
+//app.UseSession();
 app.UseStaticFiles();
 app.UseAntiforgery();
 app.MapHub<ProgressHub>("/progressHub");
