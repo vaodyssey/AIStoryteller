@@ -1,6 +1,9 @@
 ﻿using AIStoryteller_Repository.Migrations;
+using AIStoryteller_Repository.Repository;
+using AIStoryteller_Repository.Repository.Implementation;
 using AIStoryteller_Repository.Services;
 using AIStoryteller_Repository.Services.Implementation;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 namespace AIStoryteller.Configs
@@ -8,9 +11,10 @@ namespace AIStoryteller.Configs
 
     public static class DependencyInjection
     {
-        public static IServiceCollection AddUnitOfWork(this IServiceCollection services)
+        public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
-            //services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped<IPageRepository, PageRepository>();
             return services;
         }
 
@@ -21,8 +25,10 @@ namespace AIStoryteller.Configs
         }
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            services.AddScoped<IPdfService, PdfService>();
+            services.AddScoped<IStorytellerService, StorytellerService>();
+            services.AddScoped<IBookService, BookService>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddSignalR();          
             return services;
         }
 

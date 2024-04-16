@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AIStoryteller", "AIStoryteller\AIStoryteller.csproj", "{69EF72EC-8E29-4534-AE8B-EFFBD2643FBE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIStoryteller_Repository", "AIStoryteller_Repository\AIStoryteller_Repository.csproj", "{5AC9D6EB-F1CC-420F-AEAC-C380D576F7C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AIStoryteller_Repository", "AIStoryteller_Repository\AIStoryteller_Repository.csproj", "{5AC9D6EB-F1CC-420F-AEAC-C380D576F7C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

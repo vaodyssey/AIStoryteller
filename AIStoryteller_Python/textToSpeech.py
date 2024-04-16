@@ -1,5 +1,11 @@
 from gtts import gTTS   
-def readAloud(text:str,language:str):    
-    myobj = gTTS(text=text, lang=language, slow=False)     
-    myobj.save("welcome.mp3") 
+import shutil
+import os
+def readAloud(text:str,language:str,outputDir:str):    
+    tts = gTTS(text=text, lang=language, slow=False)  
+    print("TTS Starts! ")       
+    tts.save(outputDir) 
+    os.wait()
+    print("TTS Finishes! ")       
+    
   

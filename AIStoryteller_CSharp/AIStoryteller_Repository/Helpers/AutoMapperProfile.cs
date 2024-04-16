@@ -1,5 +1,6 @@
-﻿using AIStoryteller_Repository.DTO;
-using AIStoryteller_Repository.Entities;
+﻿using AIStoryteller_Repository.Entities;
+using AIStoryteller_Repository.Payload.Request;
+using AIStoryteller_Repository.Payload.Response;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,9 @@ namespace AIStoryteller_Repository.Helpers
     {
         public AutoMapperProfile()
         {
-            CreateMap<NewBookDto,Book>()
+            CreateMap<NewBookRequest,Book>()
                 .ForMember(dest => dest.Pages,opt=>opt.Ignore())
-                .ReverseMap();
+                .ReverseMap();                   
         }
     }
 }

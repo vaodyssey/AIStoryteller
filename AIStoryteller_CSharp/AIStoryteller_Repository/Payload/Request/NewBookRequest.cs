@@ -1,6 +1,6 @@
-﻿namespace AIStoryteller_Repository.DTO
+﻿namespace AIStoryteller_Repository.Payload.Request
 {
-    public class NewBookDto
+    public class NewBookRequest
     {
         public string Name { get; set; }
         public long Size { get; set; }

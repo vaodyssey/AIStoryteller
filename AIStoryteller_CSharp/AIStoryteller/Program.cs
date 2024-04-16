@@ -1,7 +1,10 @@
 using AIStoryteller.Components;
 using AIStoryteller.Configs;
 using AIStoryteller_Repository.Migrations;
+using AIStoryteller_Repository.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddDistributedMemoryCache();    
-builder.Services.AddUnitOfWork();
+builder.Services.AddRepositories();
 builder.Services.AddDatabase();
 builder.Services.AddServices();
 builder.Services.AddSession(options =>
@@ -37,6 +40,7 @@ app.UseHttpsRedirection();
 app.UseSession();
 app.UseStaticFiles();
 app.UseAntiforgery();
+app.MapHub<ProgressHub>("/progressHub");
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

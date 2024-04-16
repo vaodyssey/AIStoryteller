@@ -1,7 +1,59 @@
 ﻿@page "/"
-
+@using AIStoryteller_Repository.Services
+@using AIStoryteller_Repository.Payload.Request
+@using AIStoryteller_Repository.Payload.Response
+@using AIStoryteller.Components.Elements
+@inject IBookService BookService
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h2>Your Books</h2>
 
-Welcome to your new app.
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Size</th>
+            <th scope="col">Options</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var book in _books)
+        {
+            _count++;
+            <tr>
+                <th scope="row">@_count</th>
+                <td>@book.Name</td>
+                <td>@book.Size</td>
+                <td>
+                    <Dropdown ButtonText="Options" class="btn btn-secondary dropdown-toggle"
+                              role="button" id="dropdownMenuButton"
+                              data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="dropdown-item" href="#">Read</a>
+                        <a class="dropdown-item" href="#">Delete</a>
+
+                    </Dropdown>
+
+                </td>
+            </tr>
+
+        }
+
+
+    </tbody>
+</table>
+
+@code{
+    private List<BookResponse> _books = new List<BookResponse>();
+    private int _count = 0;
+    protected override async Task OnInitializedAsync()
+    {
+        _books = await BookService.GetBooks(new GetBooksPagingRequest()
+        {
+            PageCount = 1,
+            PageSize = 5
+        });
+        await base.OnInitializedAsync();
+    }
+}

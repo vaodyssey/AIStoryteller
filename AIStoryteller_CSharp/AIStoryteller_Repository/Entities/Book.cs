@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AIStoryteller_Repository.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace AIStoryteller_Repository.Entities
     public class Book:BaseEntity
     {
         public string Name { get; set; }    
-        public long Size { get; set; }    
+        public long Size { get; set; }        
         public virtual ICollection<Page> Pages { get; set; }
     }
 }

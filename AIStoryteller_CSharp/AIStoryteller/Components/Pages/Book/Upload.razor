@@ -1,0 +1,134 @@
+﻿@using AIStoryteller_Repository.Services
+@using AIStoryteller.Components.Elements
+@using AIStoryteller_Repository.Constants
+@using AIStoryteller_Repository.Payload.Request
+@using AIStoryteller_Repository.Payload.Response
+@using Microsoft.AspNetCore.SignalR.Client
+@using Microsoft.AspNetCore.Http.Connections
+
+@page "/book/upload"
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+@inject IStorytellerService storytellerService
+<head href="~/">
+
+</head>
+
+<PageTitle>New Book</PageTitle>
+
+<div class="container mb-5">
+    <h2>New Book</h2>
+
+    <p role="status">Insert your book here to begin. It should be in the PDF format.</p>
+    <div class="mb-2" hidden="@IsUploadProgressBarHidden">
+        <ProgressBar ProgressBarValue="@_uploadProgressBarValue"></ProgressBar>
+    </div>
+    <form @onsubmit="OnAddBookSubmit" class="needs-validation" novalidate>
+        <div class="input-group mb-3">
+            <InputFile class="form-control" id="inputFile" OnChange="OnBookChange" aria-describedby="uploadButton" required />
+            <button class="btn btn-primary" type="submit" id="uploadButton" disabled="@IsUploadButtonDisabled">
+                <span class="oi oi-cloud-upload" aria-hidden="true"></span> Upload Selected File
+            </button>
+        </div>
+    </form>
+
+</div>
+<div class="container mb-5" hidden="@IsConvertToAudiobookDisabled">
+    <h2>Convert To Audiobook</h2>
+    <p role="status">Would you like to convert your newly added book to audio format?</p>
+    <div class="mb-2" hidden="@IsConvertAudiobookProgessBarDisabled">
+        <ProgressBar ProgressBarValue="@_convertProgressBarValue"></ProgressBar>
+    </div>
+    <form @onsubmit="OnTTSConvertSubmit">
+        <button class="btn btn-primary" type="submit" id="ttsButton" disabled="@IsConvertButtonDisabled">
+            <span class="oi oi-cloud-upload" aria-hidden="true"></span>
+            Convert
+        </button>
+    </form>
+</div>
+
+@code {
+    private bool IsUploadButtonDisabled = true;
+    private bool IsConvertButtonDisabled = false;
+    private bool IsConvertToAudiobookDisabled = true;
+    private bool IsUploadProgressBarHidden = true;
+    private bool IsConvertAudiobookProgessBarDisabled = true;
+    private IBrowserFile _selectedFile;
+    private byte[] _pdfFileByteArray;
+    private bool IsTtsDisabled = false;
+    private BookResponse _bookDto;
+    private string _uploadProgressBarValue = "";
+    private string _convertProgressBarValue = "";
+    private HubConnection _hubConnection;
+
+    private async Task OnBookChange(InputFileChangeEventArgs e)
+    {
+        _selectedFile = e.GetMultipleFiles()[0];
+        if (_selectedFile != null) IsUploadButtonDisabled = false;
+    }
+
+    private async void OnAddBookSubmit()
+    {
+        IsUploadButtonDisabled = true;
+        IsUploadProgressBarHidden = false;
+        var newBookDto = await GetNewBookDto();
+        _bookDto = await storytellerService.SaveBookToDatabase(newBookDto);
+        await Task.Run(() =>
+        {
+            IsUploadProgressBarHidden = true;
+            IsConvertToAudiobookDisabled = false;
+        });
+    }
+    private async void OnTTSConvertSubmit()
+    {
+        IsConvertAudiobookProgessBarDisabled = false;
+        IsConvertButtonDisabled = true;
+        await storytellerService.ConvertBookToAudioBook(_bookDto.Id);
+        await Task.Run(() => { IsConvertAudiobookProgessBarDisabled = true; });
+    }
+    private async Task<NewBookRequest> GetNewBookDto()
+    {
+        Stream stream = _selectedFile.OpenReadStream(FileSpecifications.MaxFileSize);
+        MemoryStream textDataStream = new MemoryStream();
+        await stream.CopyToAsync(textDataStream);
+        textDataStream.Position = 0;
+        return new NewBookRequest()
+        {
+            Name = _selectedFile.Name,
+            Size = _selectedFile.Size,
+            TextData = textDataStream
+
+        };
+
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/progressHub"), options =>
+            {
+                options.SkipNegotiation = true;
+                options.Transports = HttpTransportType.WebSockets;
+            })
+            .Build();
+
+        _hubConnection.On<int>("UploadProgressChanged", async p =>
+        {
+            await InvokeAsync(() =>
+            {
+                _uploadProgressBarValue = $"{p}%";
+                StateHasChanged();
+            });
+        });
+
+        _hubConnection.On<int>("ConvertProgressChanged", async p =>
+        {
+            await InvokeAsync(() =>
+            {
+                _convertProgressBarValue = $"{p}%";
+                StateHasChanged();
+            });
+        });
+
+        await _hubConnection.StartAsync();
+    }
+}
