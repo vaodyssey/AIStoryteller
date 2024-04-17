@@ -1,6 +1,11 @@
 ﻿<div class="px-3 py-4">
-    <div><span class="fa fa-face-flushed"></span></div>
-    <h2>This is a super long book name</h2>
-    <div>Author name here</div>
+    <h2>@BookName</h2>
+    <h6 class="display-6">@AuthorName</h6>
 </div>
 
+@code{
+    [Parameter]
+    public string BookName { get; set; }
+    [Parameter]
+    public string AuthorName { get; set; }
+}

@@ -15,8 +15,8 @@ using AIStoryteller_Repository.SignalR;
 using System.Numerics;
 using AIStoryteller_Repository.Payload.Response;
 using AIStoryteller_Repository.Payload.Request;
-using AIStoryteller_Repository.Repository;
-using AIStoryteller_Repository.Repository.Implementation;
+using AIStoryteller_Repository.Repositories.Implementation;
+using AIStoryteller_Repository.Repositories;
 
 
 namespace AIStoryteller_Repository.Services.Implementation

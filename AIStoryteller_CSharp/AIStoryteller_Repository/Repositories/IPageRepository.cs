@@ -6,11 +6,11 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AIStoryteller_Repository.Repository
+namespace AIStoryteller_Repository.Repositories
 {
     public interface IPageRepository
     {
         public Task BulkInsert(List<Page> pages);
-        public Task<List<Page>> GetMultipleBy(Expression<Func<Page,bool>> predicate);
+        public Task<List<Page>> GetMultipleBy(Expression<Func<Page, bool>> predicate);
     }
 }

@@ -17,36 +17,36 @@
 <PageTitle>New Book</PageTitle>
 
 <div class="content mb-5 px-4">
-    <h2>New Book</h2>
-
-    <p role="status">Insert your book here to begin. It should be in the PDF format.</p>
-    <div class="mb-2" hidden="@IsUploadProgressBarHidden">
-        <ProgressBar ProgressBarValue="@_uploadProgressBarValue"></ProgressBar>
-    </div>
-    <form @onsubmit="OnAddBookSubmit" class="needs-validation" novalidate>
-        <div class="input-group mb-3">
-            <InputFile class="form-control" id="inputFile" OnChange="OnBookChange" aria-describedby="uploadButton" required />
-            <button class="btn btn-primary" type="submit" id="uploadButton" disabled="@IsUploadButtonDisabled">
-                <span class="oi oi-cloud-upload" aria-hidden="true"></span> Upload Selected File
-            </button>
+    <div class="mb-5">
+        <h2>New Book</h2>
+        <p role="status">Insert your book here to begin. It should be in the PDF format.</p>
+        <div class="mb-2" hidden="@IsUploadProgressBarHidden">
+            <ProgressBar ProgressBarValue="@_uploadProgressBarValue"></ProgressBar>
         </div>
-    </form>
+        <form @onsubmit="OnAddBookSubmit" class="needs-validation" novalidate>
+            <div class="input-group mb-3">
+                <InputFile class="form-control" id="inputFile" OnChange="OnBookChange" aria-describedby="uploadButton" required />
+                <button class="btn btn-primary" type="submit" id="uploadButton" disabled="@IsUploadButtonDisabled">
+                    <span class="oi oi-cloud-upload" aria-hidden="true"></span> Upload Selected File
+                </button>
+            </div>
+        </form>
 
-</div>
-<div class="container mb-5" hidden="@IsConvertToAudiobookDisabled">
-    <h2>Convert To Audiobook</h2>
-    <p role="status">Would you like to convert your newly added book to audio format?</p>
-    <div class="mb-2" hidden="@IsConvertAudiobookProgessBarDisabled">
-        <ProgressBar ProgressBarValue="@_convertProgressBarValue"></ProgressBar>
     </div>
-    <form @onsubmit="OnTTSConvertSubmit">
-        <button class="btn btn-primary" type="submit" id="ttsButton" disabled="@IsConvertButtonDisabled">
-            <span class="oi oi-cloud-upload" aria-hidden="true"></span>
-            Convert
-        </button>
-    </form>
+    <div class="mb-5" hidden="@IsConvertToAudiobookDisabled">
+        <h2>Convert To Audiobook</h2>
+        <p role="status">Would you like to convert your newly added book to audio format?</p>
+        <div class="mb-2" hidden="@IsConvertAudiobookProgessBarDisabled">
+            <ProgressBar ProgressBarValue="@_convertProgressBarValue"></ProgressBar>
+        </div>
+        <form @onsubmit="OnTTSConvertSubmit">
+            <button class="btn btn-primary" type="submit" id="ttsButton" disabled="@IsConvertButtonDisabled">
+                <span class="oi oi-cloud-upload" aria-hidden="true"></span>
+                Convert
+            </button>
+        </form>
+    </div>
 </div>
-
 @code {
     private bool IsUploadButtonDisabled = true;
     private bool IsConvertButtonDisabled = false;

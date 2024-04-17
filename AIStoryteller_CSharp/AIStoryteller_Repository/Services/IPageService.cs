@@ -1,5 +1,4 @@
 ﻿using AIStoryteller_Repository.Payload.Request;
-
 using AIStoryteller_Repository.Payload.Response;
 using System;
 using System.Collections.Generic;
@@ -9,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace AIStoryteller_Repository.Services
 {
-    public interface IBookService
+    public interface IPageService
     {
-        Task<List<BookResponse>> GetBooks(GetBooksPagingRequest pagingRequest);
-        Task<BookResponse> GetBookById(int bookId);
+        Task<List<PageResponse>> GetPagesByBookId(int bookId);
     }
 }

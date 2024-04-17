@@ -1,6 +1,9 @@
-﻿<div class="container row gx-0">
-    <div class="overflow-auto page-list-row-height page-list-row-height">
-        @for (int index = 1; index <= 275; index++)
+﻿@using AIStoryteller_Repository.Payload.Response
+@using AIStoryteller_Repository.Services
+@inject IPageService PageService 
+<div class="container row gx-0">
+    <div class="overflow-auto page-list-row-height">
+        @foreach(var pageResponse in _pageResponseList)
         {
             <div class="card">
                 <div class="p-4 card-body">
@@ -8,17 +11,19 @@
                         <div class="col-lg-10 col-md-10 col-sm-10">
                             <div class="align-items-center row">
                                 <div class="col-lg-2 col-md-2 col-sm-2">
-                                    
-                                    <h2>@index</h2>
-                                    
+
+                                    <h2>@pageResponse.PageNumber</h2>
+
                                 </div>
                                 <div class="col-lg-10 col-md-10 col-sm-10">
-                                    <div class="candidate-list-content mt-3 mt-lg-0">
+                                    <div class="container mt-3 overflow-hidden mt-lg-0">
                                         <h5 class="fs-19 mb-0">
-                                            <a class="primary-link" href="/book/read">Page @index</a>
+                                           <div class="page-content">
+                                               @pageResponse.Content
+                                            </div>
                                         </h5>
                                     </div>
-                                </div>                               
+                                </div>
                             </div>
 
                         </div>
@@ -35,11 +40,25 @@
 </div>
 
 <style>
-    .page-list-container {
-        background-color: #d8f9ff; /* Custom background color */
+    .page-content {
+        height:3rem;
+        width:15rem;
+        text-overflow:ellipsis;
     }
 
     .page-list-row-height {
-        height:75vh;
+        height: 53vh;
     }
 </style>
+
+@code {
+    [Parameter]
+    public string BookId { get; set; }
+    private List<PageResponse> _pageResponseList = new List<PageResponse>();
+    protected override async Task OnInitializedAsync()
+    {
+        int bookId = Convert.ToInt32(BookId);
+        _pageResponseList = await PageService.GetPagesByBookId(bookId);
+    }
+}
+

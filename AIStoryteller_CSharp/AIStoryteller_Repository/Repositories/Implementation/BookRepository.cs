@@ -1,5 +1,6 @@
 ﻿using AIStoryteller_Repository.Entities;
 using AIStoryteller_Repository.Migrations;
+using AIStoryteller_Repository.Repositories;
 using Azure;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,7 +10,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AIStoryteller_Repository.Repository.Implementation
+namespace AIStoryteller_Repository.Repositories.Implementation
 {
     public class BookRepository : IBookRepository
     {
@@ -27,11 +28,7 @@ namespace AIStoryteller_Repository.Repository.Implementation
             return result;
         }
 
-        public async Task<Book> GetById(int bookId)
-        {
-            throw new NotImplementedException();
-        }
-        public async Task<Book> GetBy(Expression<Func<Book,bool>> predicate)
+        public async Task<Book> GetBy(Expression<Func<Book, bool>> predicate)
         {
             var result = await _dbContext.Books.FirstOrDefaultAsync(predicate);
             return result;

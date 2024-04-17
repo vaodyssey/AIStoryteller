@@ -3,7 +3,7 @@ using AIStoryteller_Repository.Entities;
 using AIStoryteller_Repository.Migrations;
 using AIStoryteller_Repository.Payload.Request;
 using AIStoryteller_Repository.Payload.Response;
-using AIStoryteller_Repository.Repository;
+using AIStoryteller_Repository.Repositories;
 using AIStoryteller_Repository.SignalR;
 using AutoMapper;
 using iTextSharp.text.pdf;

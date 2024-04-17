@@ -2,7 +2,7 @@
 using AIStoryteller_Repository.Migrations;
 using AIStoryteller_Repository.Payload.Request;
 using AIStoryteller_Repository.Payload.Response;
-using AIStoryteller_Repository.Repository;
+using AIStoryteller_Repository.Repositories;
 using AutoMapper;
 using iTextSharp.text;
 using System;
@@ -16,6 +16,8 @@ namespace AIStoryteller_Repository.Services.Implementation
     public class BookService : IBookService
     {
         private List<Book> _books;
+        private Book _book;
+        private BookResponse _bookResponse;
         private List<BookResponse> _bookResponseList;
         private GetBooksPagingRequest _pagingRequest;
         private IBookRepository _bookRepository;
@@ -30,23 +32,40 @@ namespace AIStoryteller_Repository.Services.Implementation
         {
             _pagingRequest = pagingRequest;
             _books = await _bookRepository.GetByPagination(_pagingRequest.PageCount, _pagingRequest.PageSize);
-            await MapBooksToBookDtos();
-
+            await MapBooksToBookResponseList();
             return _bookResponseList;
         }
-        private Task MapBooksToBookDtos()
+        public async Task<BookResponse> GetBookById(int bookId)
+        {
+            _book = await _bookRepository.GetBy(book => book.Id == bookId);
+            await MapBookToBookResponse();
+            return _bookResponse;
+        }
+        private Task MapBooksToBookResponseList()
         {
             return Task.Run(() =>
             {
-                foreach(var book in _books)
+                foreach (var book in _books)
                 {
                     _bookResponseList.Add(new BookResponse()
                     {
-                        Id = book.Id,   
+                        Id = book.Id,
                         Name = book.Name,
-                        Size = book.Size,   
+                        Size = book.Size,
                     });
                 }
+            });
+        }
+        private Task MapBookToBookResponse()
+        {
+            return Task.Run(() =>
+            {
+                _bookResponse = new BookResponse()
+                {
+                    Id = _book.Id,
+                    Name = _book.Name,
+                    Size = _book.Size,
+                };
             });
         }
         private void InitializeObjects()

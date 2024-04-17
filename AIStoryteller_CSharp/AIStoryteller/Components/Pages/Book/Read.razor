@@ -1,29 +1,28 @@
-﻿@page "/book/read"
+﻿@page "/book/read/{BookId}"
+@using System.Diagnostics
 @using AIStoryteller.Components.Elements.Book_Read
-<head>
-    <link rel="stylesheet" href="css/font-awesome/css/fontawesome.min.css" />
-
-</head>
-
+@using AIStoryteller_Repository.Payload.Response 
+@using AIStoryteller_Repository.Services
+@inject IBookService BookService
 <div class="container vh-100">
     <div class="row">
         <div class="col-lg-4 col-sm-4 col-md-4 gx-0">
             <BookImage></BookImage>
         </div>
         <div class="col-lg-8 col-sm-8 col-md-8 gx-2">
-            <div class="container vh-100">
-                <div class="row">
-                    <div class="container general-info-container">
+            <div class="container">
+                <div class="row vh-40">
+                    <div class="container general-info-container ">
                         <div class="row px-2">
-                            backButton
+                            <MainControls></MainControls>
                         </div>
                         <div class="row">
-                            <BookInfo></BookInfo>
+                            <BookInfo BookName="@_bookResponse.Name" AuthorName="Hihihi"></BookInfo>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <PageList></PageList>
+                <div class="row vh-60">
+                    <PageList BookId="@BookId"></PageList>
                 </div>
             </div>
         </div>
@@ -35,3 +34,13 @@
         background-color: #d8f9ff; /* Custom background color */
     }
 </style>
+@code{
+    [Parameter]
+    public string BookId { get; set; }
+    private BookResponse _bookResponse = new BookResponse();
+    protected override async Task OnInitializedAsync()
+    {
+        int bookId = Convert.ToInt32(BookId);
+        _bookResponse = await BookService.GetBookById(bookId);
+    }
+}

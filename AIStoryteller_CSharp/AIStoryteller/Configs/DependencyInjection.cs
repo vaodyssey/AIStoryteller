@@ -1,6 +1,6 @@
 ﻿using AIStoryteller_Repository.Migrations;
-using AIStoryteller_Repository.Repository;
-using AIStoryteller_Repository.Repository.Implementation;
+using AIStoryteller_Repository.Repositories;
+using AIStoryteller_Repository.Repositories.Implementation;
 using AIStoryteller_Repository.Services;
 using AIStoryteller_Repository.Services.Implementation;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -20,15 +20,18 @@ namespace AIStoryteller.Configs
 
         public static IServiceCollection AddDatabase(this IServiceCollection services)
         {
-            services.AddDbContext<AIStorytellerDbContext>(options => options.UseSqlServer(GetConnectionString()));
+            services.AddDbContext<AIStorytellerDbContext>(options => 
+                options.UseSqlServer(GetConnectionString()), 
+                ServiceLifetime.Transient);
             return services;
         }
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<IStorytellerService, StorytellerService>();
             services.AddScoped<IBookService, BookService>();
+            services.AddScoped<IPageService, PageService>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            services.AddSignalR();          
+            services.AddSignalR();
             return services;
         }
 

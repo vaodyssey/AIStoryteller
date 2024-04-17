@@ -37,6 +37,7 @@ var context = scope.ServiceProvider.GetRequiredService<AIStorytellerDbContext>()
 await context.Database.MigrateAsync();
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 //app.UseSession();
 app.UseStaticFiles();
 app.UseAntiforgery();

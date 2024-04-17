@@ -1,0 +1,43 @@
+﻿@inject NavigationManager NavManager
+@rendermode InteractiveServer
+<div class="px-3 py-4">
+    <div class="row align-items-center">
+        <div class="circle-border">
+            <div class="col-lg-1 col-sm-1 col-md-1" @onclick="BackToHomePage">
+                <span class="fas fa-chevron-left fa-2x"></span>
+            </div>
+        </div>
+        <div class="col-lg-11 col-sm-11 col-md-11 mb-0 align-items-center">
+            <h4 class="mb-0">
+                Reader
+            </h4>
+        </div>
+    </div>
+</div>
+
+<style>
+    .circle-border {
+        width: 50px;
+        height: 50px;
+        border-radius: 25px;
+        background-color: white;
+        color: black;
+        padding: 9px 15px;
+    }
+
+        .circle-border:active {
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            background-color: black;
+            color: white;
+            padding: 9px 15px;
+        }
+</style>
+
+@code{
+    private void BackToHomePage()
+    {
+        NavManager.NavigateTo("/");
+    }
+}

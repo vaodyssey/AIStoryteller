@@ -1,7 +1,7 @@
 ﻿using AIStoryteller_Repository.Constants;
 using AIStoryteller_Repository.Entities;
 using AIStoryteller_Repository.Migrations;
-using AIStoryteller_Repository.Repository;
+using AIStoryteller_Repository.Repositories;
 using AIStoryteller_Repository.SignalR;
 using AutoMapper;
 using Microsoft.AspNetCore.SignalR;

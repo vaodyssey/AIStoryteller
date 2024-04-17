@@ -16,7 +16,7 @@ namespace AIStoryteller_Repository.Helpers
         {
             CreateMap<NewBookRequest,Book>()
                 .ForMember(dest => dest.Pages,opt=>opt.Ignore())
-                .ReverseMap();                   
+                .ReverseMap();               
         }
     }
 }
