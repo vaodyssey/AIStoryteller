@@ -2,6 +2,7 @@
 using AIStoryteller_Repository.Entities;
 using AIStoryteller_Repository.Migrations;
 using AIStoryteller_Repository.Repositories;
+using AIStoryteller_Repository.Repositories.Implementation;
 using AIStoryteller_Repository.SignalR;
 using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
@@ -23,11 +24,11 @@ namespace AIStoryteller_Repository.Services.Implementation
         private List<Page> _pages;
         private IPageRepository _pageRepository;
         private readonly IHubContext<ProgressHub> _hubContext;
-        public TextToSpeechService(IPageRepository pageRepository, 
+        public TextToSpeechService(IPageRepository pageRepository,
             IHubContext<ProgressHub> hubContext)
         {
 
-            _convertedCount = 0;
+            _convertedCount = 1;
             _pageRepository = pageRepository;
             _hubContext = hubContext;
         }
@@ -49,22 +50,26 @@ namespace AIStoryteller_Repository.Services.Implementation
                 for (int pageIndex = 0; pageIndex < _pages.Count(); pageIndex++)
                 {
                     var page = _pages.ElementAt(pageIndex);
-                    string outputName = $"output{pageIndex + 1}.mp3";
-                    var ttsTask = new Task(() => RunTTS(page.Content, outputName));
+                    string outputName = page.AudioPath;
+
+                    var ttsTask = new Task(async () =>
+                    {                 
+                        await RunTTS(page.Content, outputName);                       
+                   });
                     ttsTask.Start();
                     ttsTasks.Add(ttsTask);
                 }
 
                 Task.WaitAll(ttsTasks.ToArray());
             });
-        }
-        private async void RunTTS(string text, string outputName)
+        }    
+        private async Task RunTTS(string text, string outputPath)
         {
             if (string.IsNullOrEmpty(text)) return;
             ProcessStartInfo psi = new ProcessStartInfo()
             {
                 FileName = "python",
-                Arguments = $"\"{Paths.TtsPythonScriptPath}\" \"{text}\" \"en\" \"{Paths.TempAudioPath}\\{outputName}\"",
+                Arguments = $"\"{Paths.TtsPythonScriptPath}\" \"{text}\" \"en\" \"{outputPath}\"",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 CreateNoWindow = true

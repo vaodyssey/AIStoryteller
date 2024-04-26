@@ -90,7 +90,7 @@ namespace AIStoryteller_Repository.Services.Implementation
                     BookId = _bookId,
                     Content = text,
                     PageNumber = currentPage,
-                    AudioPath = ""
+                    AudioPath = $"{Paths.TempAudioPath}/{OutputAudioInfo.OUTPUT_FILE_NAME(currentPage)}"
                 };
                 _buffer.Add(pg);
                 await UpdateProgress(currentPage, _textPerPageList.Count());

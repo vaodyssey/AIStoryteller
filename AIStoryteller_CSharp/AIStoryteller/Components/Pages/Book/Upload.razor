@@ -43,25 +43,34 @@
 
             </div>
         </div>
-        <div class="mb-2" hidden="@IsUploadProgressBarHidden">
-            <ProgressBar ProgressBarValue="@_uploadProgressBarValue"></ProgressBar>
-        </div>
+        
 
 
     </div>
-    @*<div class="mb-5" hidden="@IsConvertToAudiobookDisabled">
-            <h2>Convert To Audiobook</h2>
-            <p role="status">Would you like to convert your newly added book to audio format?</p>
-            <div class="mb-2" hidden="@IsConvertAudiobookProgessBarDisabled">
-                <ProgressBar ProgressBarValue="@_convertProgressBarValue"></ProgressBar>
+    <div class="container" hidden="@IsConversionProcessUIHidden">
+        
+            <div class="row" >
+                
             </div>
-            <form @onsubmit="OnTTSConvertSubmit">
-                <button class="btn btn-primary" type="submit" id="ttsButton" disabled="@IsConvertButtonDisabled">
-                    <span class="oi oi-cloud-upload" aria-hidden="true"></span>
-                    Convert
-                </button>
-            </form>
-        </div>*@
+            <div class="row">
+                <h2>Conversion To Audiobook</h2>                
+                <p>Hang on tight while we are audio-fying your book!</p>
+                <div class="mb-1">
+                    <div class="content">
+                        <h5>Step 1: Extracting text from your book</h5>
+                        <ProgressBar ProgressBarValue="@_uploadProgressBarValue"></ProgressBar>
+                    </div>
+                </div>
+                <div class="mb-1">
+                    <div class="content">
+                        <h5>Step 2: Converting pages to audio clips for playback</h5>
+                        <ProgressBar ProgressBarValue="@_convertProgressBarValue"></ProgressBar>
+                    </div>
+                </div>
+
+                
+            </div>        
+    </div>
 </div>
 @code {
     private NewBookDetails _newBookDetailsRef;
@@ -69,22 +78,34 @@
     private NewBookRequest _newBookRequest;
     private string _uploadProgressBarValue = "";
     private string _convertProgressBarValue = "";
-    private bool IsUploadButtonDisabled = true;
-    private bool IsConvertButtonDisabled = false;
-    private bool IsUploadProgressBarHidden = true;
+    private bool IsConversionProcessUIHidden = true;
     private HubConnection _hubConnection;
     private byte[] _bookTextData;
     private async Task UploadBook()
     {
-        _newBookRequest = _newBookDetailsRef.GetBookDetails();
+        _newBookRequest = await _newBookDetailsRef.GetBookDetails();
         _bookTextData = await _uploadPdfFormRef.GetAddedBook();
         if (_newBookRequest == null || _bookTextData == null)
         {
             return;
         }
         await BindBookTextDataToNewBookRequest();
-        await StorytellerService.SaveBookToDatabase(_newBookRequest);
+        await EnableProgressBars();
+        await HandleAudiobookConversionProcess();
 
+    }
+    private async Task HandleAudiobookConversionProcess()
+    {
+        var response = await StorytellerService.SaveBookToDatabase(_newBookRequest);
+        await StorytellerService.ConvertBookToAudioBook(response.Id);
+    }
+    private Task EnableProgressBars()
+    {
+        return InvokeAsync(() =>
+        {
+            IsConversionProcessUIHidden = false;
+            StateHasChanged();
+        });
     }
     private async Task BindBookTextDataToNewBookRequest()
     {
@@ -120,4 +141,5 @@
 
         await _hubConnection.StartAsync();
     }
+
 }

@@ -12,5 +12,8 @@ namespace AIStoryteller_Repository.Repositories
     {
         public Task BulkInsert(List<Page> pages);
         public Task<List<Page>> GetMultipleBy(Expression<Func<Page, bool>> predicate);
+        public Task<Page> GetById(int id);
+        public Task Update(Page page);
+
     }
 }

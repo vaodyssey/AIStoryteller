@@ -24,10 +24,22 @@ namespace AIStoryteller_Repository.Repositories.Implementation
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task<Page> GetById(int id)
+        {
+            var result = await _dbContext.Pages.FirstOrDefaultAsync(page => page.Id == id);
+            return result!;
+        }
+
         public async Task<List<Page>> GetMultipleBy(Expression<Func<Page, bool>> predicate)
         {
             var result = await _dbContext.Pages.Where(predicate).ToListAsync()!;
             return result;
+        }
+
+        public async Task Update(Page page)
+        {
+            _dbContext.Pages.Update(page);            
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

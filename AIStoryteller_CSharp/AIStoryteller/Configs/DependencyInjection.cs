@@ -13,8 +13,8 @@ namespace AIStoryteller.Configs
     {
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
-            services.AddScoped<IBookRepository, BookRepository>();
-            services.AddScoped<IPageRepository, PageRepository>();
+            services.AddTransient<IBookRepository, BookRepository>();
+            services.AddTransient<IPageRepository, PageRepository>();
             return services;
         }
 
@@ -27,9 +27,9 @@ namespace AIStoryteller.Configs
         }
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            services.AddScoped<IStorytellerService, StorytellerService>();
-            services.AddScoped<IBookService, BookService>();
-            services.AddScoped<IPageService, PageService>();
+            services.AddTransient<IStorytellerService, StorytellerService>();
+            services.AddTransient<IBookService, BookService>();
+            services.AddTransient<IPageService, PageService>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddSignalR();
             return services;

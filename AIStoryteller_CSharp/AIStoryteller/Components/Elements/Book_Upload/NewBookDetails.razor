@@ -31,9 +31,8 @@
         EC = new EditContext(newBookRequest);
         base.OnInitialized();
     }
-    public NewBookRequest GetBookDetails()
+    public async Task<NewBookRequest> GetBookDetails()
     {
-
         bool isValid = EC.Validate();
         if (!isValid) return null;
         return newBookRequest;
