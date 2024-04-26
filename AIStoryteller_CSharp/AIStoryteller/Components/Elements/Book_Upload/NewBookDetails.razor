@@ -1,0 +1,47 @@
+﻿@using System.Diagnostics; 
+@using AIStoryteller_Repository.Payload.Request;
+
+<div class="container">
+    <EditForm EditContext="@EC">
+        <DataAnnotationsValidator />
+
+        <div class="form-group">
+            <h5 for="exampleFormControlInput1">Name</h5>
+            <InputText class="form-control" @bind-Value="@newBookRequest.Name" placeholder="Enter the book's name here." />
+        </div>
+        <ValidationMessage For="@(()=>newBookRequest.Name)" />
+        <div class="form-group mt-3">
+            <h5 for="exampleFormControlInput1">Author's Name</h5>
+            <InputText type="email" class="form-control" @bind-Value="@newBookRequest.AuthorName" placeholder="Enter the book's author name here." />
+        </div>
+        <ValidationMessage For="@(()=>newBookRequest.AuthorName)" />
+        <div class="form-group mt-3">
+            <h5 for="exampleFormControlTextarea1">Description</h5>
+            <InputTextArea class="form-control text-area-no-resize" @bind-Value="@newBookRequest.Description" rows="3" />
+        </div>
+        <ValidationMessage For="@(()=>newBookRequest.Description)" />
+    </EditForm>
+</div>
+
+@code{
+    private NewBookRequest newBookRequest = new NewBookRequest();
+    private EditContext EC { get; set; }
+    protected override void OnInitialized()
+    {
+        EC = new EditContext(newBookRequest);
+        base.OnInitialized();
+    }
+    public NewBookRequest GetBookDetails()
+    {
+
+        bool isValid = EC.Validate();
+        if (!isValid) return null;
+        return newBookRequest;
+    }
+}
+
+<style>
+    .text-area-no-resize{
+        resize:none;
+    }
+</style>

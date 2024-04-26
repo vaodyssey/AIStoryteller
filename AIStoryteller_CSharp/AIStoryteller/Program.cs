@@ -15,6 +15,7 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddRepositories();
 builder.Services.AddDatabase();
 builder.Services.AddServices();
+builder.WebHost.UseStaticWebAssets();
 //builder.Services.AddSession(options =>
 //{
 //    options.IdleTimeout = TimeSpan.FromMinutes(30);

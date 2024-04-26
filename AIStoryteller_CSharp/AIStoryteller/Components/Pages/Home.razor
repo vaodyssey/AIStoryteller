@@ -7,18 +7,20 @@
 <PageTitle>Home</PageTitle>
 
 
+<article class="content mb-5 px-4">
 
-<div class="content mb-5 px-4">
     <h2>Your Books</h2>
     <div class="container mt-5">
         <div class="row w-full">
             @foreach (var book in _books)
             {
-                <BookCard BookId="@book.Id" BookName="@book.Name" Author="Dummy Author"></BookCard>
+                <BookCard BookId="@book.Id" BookName="@book.Name" 
+                          Author="@book.AuthorName"
+                          Description="@book.Description"></BookCard>
             }
         </div>
     </div>
-</div>
+</article>
 @code{
     private List<BookResponse> _books = new List<BookResponse>();
     private int _count = 0;

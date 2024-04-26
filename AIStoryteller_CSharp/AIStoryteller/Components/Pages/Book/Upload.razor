@@ -1,15 +1,16 @@
-﻿@using AIStoryteller_Repository.Services
-@using AIStoryteller.Components.Elements
-@using AIStoryteller_Repository.Constants
+﻿
+@using AIStoryteller.Components.Elements.Book_Upload
 @using AIStoryteller_Repository.Payload.Request
-@using AIStoryteller_Repository.Payload.Response
-@using Microsoft.AspNetCore.SignalR.Client
+@using AIStoryteller_Repository.Services
 @using Microsoft.AspNetCore.Http.Connections
-
-@page "/book/upload"
+@using Microsoft.AspNetCore.SignalR.Client
+@using AIStoryteller.Components.Elements
+@inject IStorytellerService StorytellerService
 @inject NavigationManager Navigation
+@page "/book/upload"
+
 @rendermode InteractiveServer
-@inject IStorytellerService storytellerService
+
 <head href="~/">
 
 </head>
@@ -18,88 +19,76 @@
 
 <div class="content mb-5 px-4">
     <div class="mb-5">
-        <h2>New Book</h2>
-        <p role="status">Insert your book here to begin. It should be in the PDF format.</p>
+        <h2>Upload a New Book</h2>
+        <p role="status">Insert your book here to begin</p>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <UploadPDFForm @ref="@_uploadPdfFormRef"></UploadPDFForm>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-8">
+                    <div class="container">
+                        <div class="row">
+                            <NewBookDetails @ref="@_newBookDetailsRef"></NewBookDetails>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="container mt-3">
+                                <button @onclick="UploadBook" class="btn btn-primary">Upload</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
         <div class="mb-2" hidden="@IsUploadProgressBarHidden">
             <ProgressBar ProgressBarValue="@_uploadProgressBarValue"></ProgressBar>
         </div>
-        <form @onsubmit="OnAddBookSubmit" class="needs-validation" novalidate>
-            <div class="input-group mb-3">
-                <InputFile class="form-control" id="inputFile" OnChange="OnBookChange" aria-describedby="uploadButton" required />
-                <button class="btn btn-primary" type="submit" id="uploadButton" disabled="@IsUploadButtonDisabled">
-                    <span class="oi oi-cloud-upload" aria-hidden="true"></span> Upload Selected File
-                </button>
-            </div>
-        </form>
+
 
     </div>
-    <div class="mb-5" hidden="@IsConvertToAudiobookDisabled">
-        <h2>Convert To Audiobook</h2>
-        <p role="status">Would you like to convert your newly added book to audio format?</p>
-        <div class="mb-2" hidden="@IsConvertAudiobookProgessBarDisabled">
-            <ProgressBar ProgressBarValue="@_convertProgressBarValue"></ProgressBar>
-        </div>
-        <form @onsubmit="OnTTSConvertSubmit">
-            <button class="btn btn-primary" type="submit" id="ttsButton" disabled="@IsConvertButtonDisabled">
-                <span class="oi oi-cloud-upload" aria-hidden="true"></span>
-                Convert
-            </button>
-        </form>
-    </div>
+    @*<div class="mb-5" hidden="@IsConvertToAudiobookDisabled">
+            <h2>Convert To Audiobook</h2>
+            <p role="status">Would you like to convert your newly added book to audio format?</p>
+            <div class="mb-2" hidden="@IsConvertAudiobookProgessBarDisabled">
+                <ProgressBar ProgressBarValue="@_convertProgressBarValue"></ProgressBar>
+            </div>
+            <form @onsubmit="OnTTSConvertSubmit">
+                <button class="btn btn-primary" type="submit" id="ttsButton" disabled="@IsConvertButtonDisabled">
+                    <span class="oi oi-cloud-upload" aria-hidden="true"></span>
+                    Convert
+                </button>
+            </form>
+        </div>*@
 </div>
 @code {
-    private bool IsUploadButtonDisabled = true;
-    private bool IsConvertButtonDisabled = false;
-    private bool IsConvertToAudiobookDisabled = true;
-    private bool IsUploadProgressBarHidden = true;
-    private bool IsConvertAudiobookProgessBarDisabled = true;
-    private IBrowserFile _selectedFile;
-    private byte[] _pdfFileByteArray;
-    private bool IsTtsDisabled = false;
-    private BookResponse _bookDto;
+    private NewBookDetails _newBookDetailsRef;
+    private UploadPDFForm _uploadPdfFormRef;
+    private NewBookRequest _newBookRequest;
     private string _uploadProgressBarValue = "";
     private string _convertProgressBarValue = "";
+    private bool IsUploadButtonDisabled = true;
+    private bool IsConvertButtonDisabled = false;
+    private bool IsUploadProgressBarHidden = true;
     private HubConnection _hubConnection;
-
-    private async Task OnBookChange(InputFileChangeEventArgs e)
+    private byte[] _bookTextData;
+    private async Task UploadBook()
     {
-        _selectedFile = e.GetMultipleFiles()[0];
-        if (_selectedFile != null) IsUploadButtonDisabled = false;
-    }
-
-    private async void OnAddBookSubmit()
-    {
-        IsUploadButtonDisabled = true;
-        IsUploadProgressBarHidden = false;
-        var newBookDto = await GetNewBookDto();
-        _bookDto = await storytellerService.SaveBookToDatabase(newBookDto);
-        await Task.Run(() =>
+        _newBookRequest = _newBookDetailsRef.GetBookDetails();
+        _bookTextData = await _uploadPdfFormRef.GetAddedBook();
+        if (_newBookRequest == null || _bookTextData == null)
         {
-            IsUploadProgressBarHidden = true;
-            IsConvertToAudiobookDisabled = false;
-        });
-    }
-    private async void OnTTSConvertSubmit()
-    {
-        IsConvertAudiobookProgessBarDisabled = false;
-        IsConvertButtonDisabled = true;
-        await storytellerService.ConvertBookToAudioBook(_bookDto.Id);
-        await Task.Run(() => { IsConvertAudiobookProgessBarDisabled = true; });
-    }
-    private async Task<NewBookRequest> GetNewBookDto()
-    {
-        Stream stream = _selectedFile.OpenReadStream(FileSpecifications.MaxFileSize);
-        MemoryStream textDataStream = new MemoryStream();
-        await stream.CopyToAsync(textDataStream);
-        textDataStream.Position = 0;
-        return new NewBookRequest()
-        {
-            Name = _selectedFile.Name,
-            Size = _selectedFile.Size,
-            TextData = textDataStream
+            return;
+        }
+        await BindBookTextDataToNewBookRequest();
+        await StorytellerService.SaveBookToDatabase(_newBookRequest);
 
-        };
-
+    }
+    private async Task BindBookTextDataToNewBookRequest()
+    {
+        _newBookRequest.TextData = new MemoryStream(_bookTextData);
     }
     protected override async Task OnInitializedAsync()
     {

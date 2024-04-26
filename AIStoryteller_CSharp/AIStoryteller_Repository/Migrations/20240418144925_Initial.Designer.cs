@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AIStoryteller_Repository.Migrations
 {
     [DbContext(typeof(AIStorytellerDbContext))]
-    [Migration("20240414075301_Initial")]
+    [Migration("20240418144925_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -32,6 +32,14 @@ namespace AIStoryteller_Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AuthorName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -51,6 +59,10 @@ namespace AIStoryteller_Repository.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AudioPath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("BookId")
                         .HasColumnType("int");

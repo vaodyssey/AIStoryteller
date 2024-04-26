@@ -11,6 +11,7 @@ namespace AIStoryteller_Repository.Entities
         public string Content { get; set; } 
         public int PageNumber { get; set; } 
         public int BookId { get; set; } 
+        public string AudioPath { get; set; }   
         public virtual Book Book { get; set; }  
     }
 }

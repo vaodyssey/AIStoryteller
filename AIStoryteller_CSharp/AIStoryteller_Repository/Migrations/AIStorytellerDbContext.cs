@@ -11,13 +11,13 @@ namespace AIStoryteller_Repository.Migrations
     public class AIStorytellerDbContext : DbContext
     {
         public AIStorytellerDbContext() { }
-        public AIStorytellerDbContext(DbContextOptions options) : base(options){}
+        public AIStorytellerDbContext(DbContextOptions options) : base(options){}        
         public DbSet<Book> Books { get; set; }
         public DbSet<Page> Pages { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string conn = "Data Source=(local);database=AIStorytellerDB;uid=sa;pwd=1234567890;TrustServerCertificate=True;MultipleActiveResultSets=True";
-            optionsBuilder.UseSqlServer();
+            optionsBuilder.UseSqlServer(conn);
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

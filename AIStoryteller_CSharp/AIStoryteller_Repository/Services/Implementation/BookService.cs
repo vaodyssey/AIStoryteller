@@ -51,6 +51,8 @@ namespace AIStoryteller_Repository.Services.Implementation
                     {
                         Id = book.Id,
                         Name = book.Name,
+                        Description = book.Description,
+                        AuthorName = book.AuthorName,
                         Size = book.Size,
                     });
                 }
@@ -65,6 +67,7 @@ namespace AIStoryteller_Repository.Services.Implementation
                     Id = _book.Id,
                     Name = _book.Name,
                     Size = _book.Size,
+                    AuthorName= _book.AuthorName,   
                 };
             });
         }
