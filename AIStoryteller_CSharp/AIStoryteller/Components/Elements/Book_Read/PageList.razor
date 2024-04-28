@@ -1,64 +1,77 @@
 ﻿@using AIStoryteller_Repository.Payload.Response
 @using AIStoryteller_Repository.Services
-@inject IPageService PageService 
+@using AIStoryteller.Components.Elements.Book_Read
+@using Microsoft.AspNetCore.Components.Routing
+@rendermode InteractiveServer
+@inject IJSRuntime JSRuntime
+@inject IPageService PageService
+@inject NavigationManager NavManager
 <div class="container row gx-0">
     <div class="overflow-auto page-list-row-height">
-        @foreach(var pageResponse in _pageResponseList)
+        @foreach (var pageResponse in _pageResponseList)
         {
-            <div class="card">
-                <div class="p-4 card-body">
-                    <div class="row">
-                        <div class="col-lg-10 col-md-10 col-sm-10">
-                            <div class="align-items-center row">
-                                <div class="col-lg-2 col-md-2 col-sm-2">
-
-                                    <h2>@pageResponse.PageNumber</h2>
-
-                                </div>
-                                <div class="col-lg-10 col-md-10 col-sm-10">
-                                    <div class="container mt-3 overflow-hidden mt-lg-0">
-                                        <h5 class="fs-19 mb-0">
-                                           <div class="page-content">
-                                               @pageResponse.Content
-                                            </div>
-                                        </h5>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="d-flex align-items-center col-lg-2 col-md-2 col-sm-2">
-
-                            <span class="badge bg-success ms-1">0:00</span>
-
-                        </div>
-                    </div>
-                </div>
+            <div @onclick="()=>RefreshAudio(pageResponse)">
+                <PageItemInList PageResponse="@pageResponse"></PageItemInList>
             </div>
+
         }
     </div>
+    
 </div>
 
-<style>
-    .page-content {
-        height:3rem;
-        width:15rem;
-        text-overflow:ellipsis;
+
+<script>
+
+    let audioElement;
+
+    function initializeAudioPlayer() {
+        audioElement = document.createElement('audio');
+        document.body.appendChild(audioElement);
     }
 
-    .page-list-row-height {
-        height: 53vh;
+    function playAudio(base64Audio) {
+        stopAudio()
+        audioElement.src = "data:audio/mpeg;base64,"+base64Audio;
+        audioElement.play();
     }
-</style>
+
+    function stopAudio() {
+        audioElement.pause();
+        audioElement.src = '';
+    }
+
+</script>
 
 @code {
     [Parameter]
     public string BookId { get; set; }
     private List<PageResponse> _pageResponseList = new List<PageResponse>();
+    private string _base64Audio { get; set; }
+    private PageResponse _selectedPage { get; set; }
+    public async void StopAudioOnPageExit()
+    {
+        await JSRuntime.InvokeVoidAsync("stopAudio");
+    }
     protected override async Task OnInitializedAsync()
     {
         int bookId = Convert.ToInt32(BookId);
         _pageResponseList = await PageService.GetPagesByBookId(bookId);
     }
+    private async Task RefreshAudio(PageResponse pageResponse)
+    {
+
+        await JSRuntime.InvokeVoidAsync("stopAudio");
+        byte[] audioBytes = File.ReadAllBytes(pageResponse.AudioPath);
+        _base64Audio = Convert.ToBase64String(audioBytes);
+        await JSRuntime.InvokeVoidAsync("playAudio", _base64Audio);
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("initializeAudioPlayer");
+        }
+    }
+
 }
 

@@ -44,9 +44,11 @@ namespace AIStoryteller_Repository.Services.Implementation
                 foreach (var page in _pages)
                 {
                     _pageResponseList.Add(new PageResponse()
-                    {
+                    {                        
+                        Id = page.Id,   
                         Content = page.Content,
                         PageNumber = page.PageNumber,
+                        AudioPath=page.AudioPath,   
                     });
                 }
             });

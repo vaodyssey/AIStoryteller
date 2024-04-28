@@ -10,7 +10,7 @@ namespace AIStoryteller_Repository.Constants
     {
         public static string OUTPUT_FILE_NAME(int fileNumber)
         {
-            return $"output{fileNumber}.mp4";
+            return $"rvcOutput{fileNumber}.mp3";
         }
     }
 }

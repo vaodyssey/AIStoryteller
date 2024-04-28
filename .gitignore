@@ -3,4 +3,9 @@
 /AIStoryteller_CSharp/AIStoryteller/obj/
 /AIStoryteller_CSharp/AIStoryteller_Repository/bin/
 /AIStoryteller_CSharp/AIStoryteller_Repository/obj/
+/TempAudioFiles/*.mp3
+/TempAudioFiles/rvc/*.mp3
+/TempAudioFiles/tts/*.mp3
 /AIStoryteller_Python/__pycache__
+/AIStoryteller_Python/.venv/
+/AIStoryteller_Python/.vscode/

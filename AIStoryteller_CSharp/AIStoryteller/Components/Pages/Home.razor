@@ -11,7 +11,7 @@
 
     <h2>Your Books</h2>
     <div class="container mt-5">
-        <div class="row w-full">
+        <div class="row w-full position-relative">
             @foreach (var book in _books)
             {
                 <BookCard BookId="@book.Id" BookName="@book.Name" 
@@ -21,6 +21,12 @@
         </div>
     </div>
 </article>
+
+<style>
+    .relative-pos{
+        position:relative;
+    }
+</style>
 @code{
     private List<BookResponse> _books = new List<BookResponse>();
     private int _count = 0;

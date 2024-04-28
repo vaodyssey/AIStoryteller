@@ -1,30 +1,75 @@
-﻿﻿
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">AIStoryteller</a>
+﻿@rendermode InteractiveServer
+@*<div class="top-row ps-3 navbar navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="">AIStoryteller</a>
+        </div>
     </div>
-</div>
+    <input type="checkbox" title="Navigation menu" class="navbar-toggler" />
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+    <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+        <nav class="flex-column">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                </NavLink>
+            </div>
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/book/upload">
+                    <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Upload a book
+                </NavLink>
+            </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/book/upload">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Upload a book
-            </NavLink>
-        </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="weather">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
+                </NavLink>
+            </div>
+        </nav>
+    </div>*@
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
+<div class="auto-hiding-nav-menu"
+     @onmouseover="ExpandNavMenu"
+     @onmouseout="CollapseNavMenu">
+    <nav class="nav-menu col-12 @(collapseNavMenu ? "collapsed" : "expand")">
+        <div>
+            <NavLink class="nav-link px-1" href="" Match="NavLinkMatch.All">
+                <span class="fas fa-home fa-lg nav-item-icon" aria-hidden="true">
+                    <span class="nav-item-text">Home</span>
+                </span>
+            </NavLink>      
+            <NavLink class="nav-link px-1" href="/book/upload">
+                <span class="fas fa-upload fa-lg nav-item-icon">
+                    <span class="nav-item-text">Upload</span>
+                </span>
+            </NavLink>          
         </div>
     </nav>
 </div>
+
+<style>
+    .nav-link {
+        margin-bottom: 10px;
+    }
+
+    .expand .nav-link {
+        margin-bottom: 18px;
+    }
+</style>
+
+@code {
+    private bool collapseNavMenu = true;
+    private bool isHovered = false;
+
+    private void ExpandNavMenu()
+    {
+        isHovered = true;
+        if (collapseNavMenu) collapseNavMenu = false;
+    }
+
+    private void CollapseNavMenu()
+    {
+        isHovered = false;
+        if (!collapseNavMenu) collapseNavMenu = true;
+    }
+}

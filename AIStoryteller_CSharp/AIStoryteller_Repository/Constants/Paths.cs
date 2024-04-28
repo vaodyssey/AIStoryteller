@@ -10,7 +10,10 @@ namespace AIStoryteller_Repository.Constants
     {
         private static string _workingDirectory = Environment.CurrentDirectory;
         private static string _projectDirectory = Directory.GetParent(_workingDirectory).Parent.FullName;
-        public static string TtsPythonScriptPath = $"{_projectDirectory}\\AIStoryteller_Python\\main.py";
-        public static string TempAudioPath = $"{_projectDirectory}\\TempAudioFiles\\VoiceModelNo";
+        public static string PythonProjectPath= $"{_projectDirectory}\\AIStoryteller_Python";
+        public static string TtsPythonScriptPath = $"{PythonProjectPath}\\main.py";
+        public static string ActivatePythonVenvScriptPath= $".venv\\Scripts\\activate.bat";
+        public static string TtsAudioOutputPath = $"{_projectDirectory}\\TempAudioFiles\\tts";
+        public static string RvcAudioOutputPath = $"{_projectDirectory}\\TempAudioFiles\\rvc";
     }
 }

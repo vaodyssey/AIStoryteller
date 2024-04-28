@@ -4,6 +4,7 @@ using AIStoryteller_Repository.Migrations;
 using AIStoryteller_Repository.Repositories;
 using AIStoryteller_Repository.Repositories.Implementation;
 using AIStoryteller_Repository.SignalR;
+using AIStoryteller_Repository.Utils;
 using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace AIStoryteller_Repository.Services.Implementation
 {
@@ -28,7 +30,7 @@ namespace AIStoryteller_Repository.Services.Implementation
             IHubContext<ProgressHub> hubContext)
         {
 
-            _convertedCount = 1;
+            _convertedCount = 0;
             _pageRepository = pageRepository;
             _hubContext = hubContext;
         }
@@ -53,40 +55,70 @@ namespace AIStoryteller_Repository.Services.Implementation
                     string outputName = page.AudioPath;
 
                     var ttsTask = new Task(async () =>
-                    {                 
-                        await RunTTS(page.Content, outputName);                       
-                   });
+                    {
+                        var cmdInstance = await OpenHiddenCMD();
+                        await ActivatePythonVirtualEnvironment(cmdInstance);
+                        await TTSConversion(cmdInstance, page.Content, page.PageNumber);
+                    });
                     ttsTask.Start();
                     ttsTasks.Add(ttsTask);
                 }
 
                 Task.WaitAll(ttsTasks.ToArray());
             });
-        }    
-        private async Task RunTTS(string text, string outputPath)
+        }
+        private Task<Process> OpenHiddenCMD()
         {
-            if (string.IsNullOrEmpty(text)) return;
-            ProcessStartInfo psi = new ProcessStartInfo()
+            return Task.Run(() =>
             {
-                FileName = "python",
-                Arguments = $"\"{Paths.TtsPythonScriptPath}\" \"{text}\" \"en\" \"{outputPath}\"",
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true
+                ProcessStartInfo psi = new ProcessStartInfo()
+                {
+                    FileName = "cmd.exe",
+                    CreateNoWindow = false,
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                };
+                Process process = new Process()
+                {
+                    StartInfo = psi,
+                };
 
-            };
-            var process = Process.Start(psi);
-            while (!process.StandardOutput.EndOfStream)
+                process.Start();
+                return process;
+
+            });
+        }
+        private Task ActivatePythonVirtualEnvironment(Process cmdProcess)
+        {
+            return Task.Run(() =>
             {
-                Debug.WriteLine(process.StandardOutput.ReadLine());
+                cmdProcess.StandardInput.WriteLine($@"cd /d ""{Paths.PythonProjectPath}""");
+                cmdProcess.StandardInput.WriteLine($@"""{Paths.ActivatePythonVenvScriptPath}""");
+            });
+        }
+        private async Task TTSConversion(Process cmdProcess, string text, int pageNumber)
+        {                
+            if (string.IsNullOrEmpty(text)) return;
+            string cleanedText = TextUtils.CleanAnomaliesFromText(text);    
+            string command = $@"python ""{Paths.TtsPythonScriptPath}"" ""{cleanedText}"" ""en"" ""{Paths.TtsAudioOutputPath}\\ttsOutput{pageNumber}.mp3"" ""{Paths.RvcAudioOutputPath}\\rvcOutput{pageNumber}.mp3""";
+            
+            cmdProcess.StandardInput.WriteLine(command);            
+            cmdProcess.StandardInput.Flush();
+            cmdProcess.StandardInput.Close();
+            while (!cmdProcess.StandardOutput.EndOfStream)
+            {
+                Debug.WriteLine(cmdProcess.StandardOutput.ReadLine());                
             }
-            process.WaitForExit();
+            cmdProcess.WaitForExit();
             await UpdateProgress();
         }
         private async Task UpdateProgress()
         {
             _convertedCount++;
             int progress = (int)Math.Round((double)(100 * _convertedCount) / _pages.Count);
+            if (_convertedCount == _pages.Count)
+                progress = 100;
             await _hubContext.Clients.All.SendAsync("ConvertProgressChanged", progress);
         }
 

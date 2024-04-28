@@ -1,0 +1,13 @@
+{
+    "speaker_id": 0,
+    "vc_transform0": 6,
+    "f0_file": "E:/My Coding Shits/AIStoryteller/AIStoryteller_Git/AIStoryteller_Python/assets/weights/MahiruShiina_e300_s900.pth",
+    "f0method0": "rmvpe",
+    "file_index1": "E:/My Coding Shits/AIStoryteller/AIStoryteller_Git/AIStoryteller_Python/added_IVF26_Flat_nprobe_1_MahiruShiina_v2.index",
+    "file_index2": "",
+    "index_rate1": 0.05,
+    "filter_radius0": 3,
+    "resample_sr0": 44100,
+    "rms_mix_rate0": 0.25,
+    "protect0": 0.15
+}

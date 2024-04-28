@@ -4,7 +4,7 @@ namespace AIStoryteller_Repository.Payload.Request
 {
     public class NewBookRequest
     {
-        [Required(ErrorMessage ="You must input the book's name.")]
+        [Required(ErrorMessage ="You must input the book's name.")]        
         public string Name { get; set; }
         [Required(ErrorMessage = "You must input the author's name.")]
         public string AuthorName { get; set; }
