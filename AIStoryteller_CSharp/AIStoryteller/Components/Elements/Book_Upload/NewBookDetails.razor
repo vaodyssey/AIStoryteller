@@ -17,7 +17,7 @@
         <ValidationMessage For="@(()=>newBookRequest.AuthorName)" />
         <div class="form-group mt-3">
             <h5 for="exampleFormControlTextarea1">Description</h5>
-            <InputTextArea class="form-control text-area-no-resize" @bind-Value="@newBookRequest.Description" rows="3" />
+            <InputTextArea class="form-control text-area-no-resize" @bind-Value="@newBookRequest.Description" rows="5" />
         </div>
         <ValidationMessage For="@(()=>newBookRequest.Description)" />
     </EditForm>

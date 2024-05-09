@@ -7,78 +7,119 @@
 @using AIStoryteller.Components.Elements
 @inject IStorytellerService StorytellerService
 @inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
 @page "/book/upload"
 
 @rendermode InteractiveServer
-
-<head href="~/">
-
-</head>
-
-<PageTitle>New Book</PageTitle>
-
-<div class="content mb-5 px-4">
-    <div class="mb-5">
-        <h2>Upload a New Book</h2>
-        <p role="status">Insert your book here to begin</p>
-
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 col-md-4 col-sm-4">
-                    <UploadPDFForm @ref="@_uploadPdfFormRef"></UploadPDFForm>
-                </div>
-                <div class="col-lg-8 col-md-8 col-sm-8">
-                    <div class="container">
-                        <div class="row">
-                            <NewBookDetails @ref="@_newBookDetailsRef"></NewBookDetails>
+<article class="content mb-5 px-4">
+    <PageTitle>New Book</PageTitle>
+    <div id="@carouselName" class="carousel slide" data-bs-ride="carousel" data-bs-wrap="true" data-bs-interval="2000" data-bs-pause="false">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="row">
+                    <div class="col-lg-10 col-sm-10 col-md-10">
+                        <h2>Upload a New Book</h2>
+                    </div>
+                    <div class="col-lg-1">
+                        <div data-bs-target="#@carouselName">
+                            <div class="circle-border col-lg-2 col-sm-2 col-md-2 d-inline-flex align-items-center" @onclick="UploadBook">
+                                <span class="fas fa-upload fa-2x"></span>
+                                <span class="mx-3" id="uploadBtn123">Upload</span>
+                            </div>
                         </div>
-                        <div class="row mt-2">
-                            <div class="container mt-3">
-                                <button @onclick="UploadBook" class="btn btn-primary">Upload</button>
+
+                    </div>
+                </div>
+                <p role="status">Insert your book here to begin</p>
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <UploadPDFForm @ref="@_uploadPdfFormRef"></UploadPDFForm>
+                        </div>
+                        <div class="col-lg-8 col-md-8 col-sm-8">
+                            <div class="container">
+                                <div class="row">
+                                    <NewBookDetails @ref="@_newBookDetailsRef"></NewBookDetails>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+
+                <div class="row">
+                    <div class="col-lg-10">
+                        <h2>Conversion To Audiobook</h2>
+                        <p>Hang on tight while we are audio-fying your book!</p>
+                    </div>
+                    <div class="col-lg-2">
+
+                        <div data-bs-target="#@carouselName" data-bs-slide="prev">
+                            <div class="circle-border col-lg-2 col-sm-2 col-md-2 d-inline-flex align-items-center">
+                                <span class="fas fa-cancel fa-2x"></span>
+                                <span class="mx-3">Cancel</span>
                             </div>
                         </div>
                     </div>
-
                 </div>
-
-            </div>
-        </div>
-        
-
-
-    </div>
-    <div class="container" hidden="@IsConversionProcessUIHidden">
-        
-            <div class="row" >
-                
-            </div>
-            <div class="row">
-                <h2>Conversion To Audiobook</h2>                
-                <p>Hang on tight while we are audio-fying your book!</p>
-                <div class="mb-1">
+                <div class="mb-1 ">
                     <div class="content">
                         <h5>Step 1: Extracting text from your book</h5>
                         <ProgressBar ProgressBarValue="@_uploadProgressBarValue"></ProgressBar>
+                        <div class="content">
+                            <h5>Step 2: Converting pages to audio clips for playback</h5>
+                            <ProgressBar ProgressBarValue="@_convertProgressBarValue"></ProgressBar>
+                        </div>
                     </div>
                 </div>
-                <div class="mb-1">
-                    <div class="content">
-                        <h5>Step 2: Converting pages to audio clips for playback</h5>
-                        <ProgressBar ProgressBarValue="@_convertProgressBarValue"></ProgressBar>
-                    </div>
-                </div>
+            </div>
+        </div>
 
-                
-            </div>        
     </div>
-</div>
+</article>
+
+<style>
+    .circle-border {
+        width: 140px;
+        height: 50px;
+        border-radius: 25px;
+        background-color: white;
+        color: purple;
+        border-width: 2px;
+        border-style: solid;
+        border-color: purple;
+        padding: 9px 15px;
+        cursor: default;
+    }
+
+        .circle-border:active {
+            border-radius: 25px;
+            background: rgb(2,0,36);
+            border-style: none;
+            background: linear-gradient(103deg, rgba(2,0,36,1) 0%, rgba(40,4,74,1) 26%, rgba(63,6,93,0.918446602273722) 58%, rgba(81,8,107,0.753180495831145) 81%, rgba(86,9,121,0.42544940339417014) 100%, rgba(0,212,255,1) 100%);
+            color: white;
+            padding: 9px 15px;
+        }
+</style>
+<script>
+
+    window.moveToNextSlide = () =>{        
+        $('#uploadStepsCarousel').carousel('next');        
+    }
+
+
+</script>
 @code {
     private NewBookDetails _newBookDetailsRef;
+    private string carouselName = "uploadStepsCarousel";
     private UploadPDFForm _uploadPdfFormRef;
     private NewBookRequest _newBookRequest;
     private string _uploadProgressBarValue = "";
     private string _convertProgressBarValue = "";
-    private bool IsConversionProcessUIHidden = true;
     private HubConnection _hubConnection;
     private byte[] _bookTextData;
     private async Task UploadBook()
@@ -89,23 +130,16 @@
         {
             return;
         }
+        await JSRuntime.InvokeVoidAsync("moveToNextSlide");
         await BindBookTextDataToNewBookRequest();
-        await EnableProgressBars();
         await HandleAudiobookConversionProcess();
+
 
     }
     private async Task HandleAudiobookConversionProcess()
     {
         var response = await StorytellerService.SaveBookToDatabase(_newBookRequest);
         await StorytellerService.ConvertBookToAudioBook(response.Id);
-    }
-    private Task EnableProgressBars()
-    {
-        return InvokeAsync(() =>
-        {
-            IsConversionProcessUIHidden = false;
-            StateHasChanged();
-        });
     }
     private async Task BindBookTextDataToNewBookRequest()
     {

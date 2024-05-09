@@ -14,7 +14,7 @@ namespace AIStoryteller.Configs
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddTransient<IBookRepository, BookRepository>();
-            services.AddTransient<IPageRepository, PageRepository>();
+            services.AddTransient<IPageRepository, PageRepositoryNoPTWBulkInsert>();
             return services;
         }
 

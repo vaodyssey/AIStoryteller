@@ -49,7 +49,7 @@ namespace AIStoryteller_Repository.Services.Implementation
             return Task.Run(() =>
             {
                 List<Task> ttsTasks = new List<Task>();
-                for (int pageIndex = 0; pageIndex < _pages.Count(); pageIndex++)
+                for (int pageIndex = 11; pageIndex < _pages.Count()-262; pageIndex++)
                 {
                     var page = _pages.ElementAt(pageIndex);
                     string outputName = page.AudioPath;
