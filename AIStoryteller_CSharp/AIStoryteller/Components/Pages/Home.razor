@@ -8,13 +8,22 @@
 
 
 <article class="content mb-5 px-4">
+    <div class="container mt-2 ml-2">
+        <div class="row">
+            <div class="col-lg-1 book-icon">
+                <div class="fas fa-book fa-2xl"></div>
+            </div>
+            <div class="col-lg-3 pt-1">
+                <h2 class="my-0 gy-0">Your Books</h2>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-2">
 
-    <h2>Your Books</h2>
-    <div class="container mt-5">
         <div class="row w-full position-relative">
             @foreach (var book in _books)
             {
-                <BookCard BookId="@book.Id" BookName="@book.Name" 
+                <BookCard BookId="@book.Id" BookName="@book.Name"
                           Author="@book.AuthorName"
                           Description="@book.Description"></BookCard>
             }
@@ -23,8 +32,8 @@
 </article>
 
 <style>
-    .relative-pos{
-        position:relative;
+    .relative-pos {
+        position: relative;
     }
 </style>
 @code{

@@ -13,44 +13,51 @@
 @rendermode InteractiveServer
 <article class="content mb-5 px-4">
     <PageTitle>New Book</PageTitle>
-    <div id="@carouselName" class="carousel slide" data-bs-ride="carousel" data-bs-wrap="true" data-bs-interval="2000" data-bs-pause="false">
+    <div id="@carouselName" class="carousel slide" data-bs-ride="carousel" data-bs-wrap="true" data-bs-pause="false" data-bs-interval="false">
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <div class="row">
-                    <div class="col-lg-10 col-sm-10 col-md-10">
-                        <h2>Upload a New Book</h2>
-                    </div>
-                    <div class="col-lg-1">
-                        <div data-bs-target="#@carouselName">
-                            <div class="circle-border col-lg-2 col-sm-2 col-md-2 d-inline-flex align-items-center" @onclick="UploadBook">
-                                <span class="fas fa-upload fa-2x"></span>
-                                <span class="mx-3" id="uploadBtn123">Upload</span>
+                <div class="container mt-2">
+                    <div class="row">                   
+                        <div class="col-lg-10 col-sm-10 col-md-10 gx-0">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-lg-1 upload-icon">
+                                        <div class="fas fa-book fa-2xl"></div>
+                                    </div>
+                                    <div class="col-lg-4 pt-1">
+                                        <h2 class="my-0 gy-0">Upload a Book</h2>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                    </div>
-                </div>
-                <p role="status">Insert your book here to begin</p>
 
-                <div class="container">
+                        <div class="col-lg-1">
+                            <div data-bs-target="#@carouselName">
+                                <div class="circle-border col-lg-2 col-sm-2 col-md-2 d-inline-flex align-items-center" @onclick="UploadBook">
+                                    <span class="fas fa-upload fa-2x"></span>
+                                    <span class="mx-3" id="uploadBtn123">Upload</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="container mt-3 gx-0">
                     <div class="row">
                         <div class="col-lg-4 col-md-4 col-sm-4">
                             <UploadPDFForm @ref="@_uploadPdfFormRef"></UploadPDFForm>
                         </div>
-                        <div class="col-lg-8 col-md-8 col-sm-8">
-                            <div class="container">
-                                <div class="row">
-                                    <NewBookDetails @ref="@_newBookDetailsRef"></NewBookDetails>
-                                </div>
-                            </div>
-
+                        <div class="col-lg-8 col-md-8 col-sm-8 ps-0 ">
+                            <NewBookDetails @ref="@_newBookDetailsRef"></NewBookDetails>
                         </div>
 
                     </div>
                 </div>
             </div>
-            <div class="carousel-item">
 
+            <div class="carousel-item">
                 <div class="row">
                     <div class="col-lg-10">
                         <h2>Conversion To Audiobook</h2>
@@ -82,37 +89,12 @@
     </div>
 </article>
 
-<style>
-    .circle-border {
-        width: 140px;
-        height: 50px;
-        border-radius: 25px;
-        background-color: white;
-        color: purple;
-        border-width: 2px;
-        border-style: solid;
-        border-color: purple;
-        padding: 9px 15px;
-        cursor: default;
-    }
-
-        .circle-border:active {
-            border-radius: 25px;
-            background: rgb(2,0,36);
-            border-style: none;
-            background: linear-gradient(103deg, rgba(2,0,36,1) 0%, rgba(40,4,74,1) 26%, rgba(63,6,93,0.918446602273722) 58%, rgba(81,8,107,0.753180495831145) 81%, rgba(86,9,121,0.42544940339417014) 100%, rgba(0,212,255,1) 100%);
-            color: white;
-            padding: 9px 15px;
-        }
-</style>
 <script>
-
-    window.moveToNextSlide = () =>{        
-        $('#uploadStepsCarousel').carousel('next');        
+    window.moveToNextSlide = () =>{
+        $('#uploadStepsCarousel').carousel('next');
     }
-
-
 </script>
+
 @code {
     private NewBookDetails _newBookDetailsRef;
     private string carouselName = "uploadStepsCarousel";

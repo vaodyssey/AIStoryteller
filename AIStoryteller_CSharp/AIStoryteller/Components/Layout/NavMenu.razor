@@ -32,7 +32,7 @@
      @onmouseover="ExpandNavMenu"
      @onmouseout="CollapseNavMenu">
     <nav class="nav-menu @(collapseNavMenu ? "collapsed" : "expand")">
-        <div class="px-0 navbar-logo">
+        <div class="nav-menu-top-div">
             @if (collapseNavMenu == true)
             {
                 <a href="/">
@@ -55,19 +55,19 @@
             }
         </div>
         <div class="nav-menu-middle-div">
-            <NavLink class="@(collapseNavMenu ? "nav-link  px-2" : "nav-link px-3")" href="" Match="NavLinkMatch.All">
+            <NavLink class="@(collapseNavMenu ? "nav-link px-1" : "nav-link px-2")" href="" Match="NavLinkMatch.All">
                 <span class="fas fa-home fa-lg nav-item-icon" aria-hidden="true">
                     <span class="nav-item-text">Home</span>
                 </span>
             </NavLink>
-            <NavLink class="@(collapseNavMenu ? "nav-link px-2" : "nav-link px-3")" href="/book/upload">
+            <NavLink class="@(collapseNavMenu ? "nav-link px-1" : "nav-link px-2")" href="/book/upload">
                 <span class="fas fa-upload fa-lg nav-item-icon">
                     <span class="nav-item-text">Upload</span>
                 </span>
             </NavLink>
         </div>
         <div class="nav-menu-bottom-div">
-            <NavLink class="@(collapseNavMenu ? "nav-link px-2" : "nav-link px-3")" href="/book/upload">
+            <NavLink class="@(collapseNavMenu ? "nav-link px-1" : "nav-link px-2")" href="/book/upload">
                 <span class="fas fa-cog fa-lg nav-item-icon">
                     <span class="nav-item-text">Settings</span>
                 </span>
