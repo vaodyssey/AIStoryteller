@@ -4,22 +4,25 @@
 <div class="container">
     <EditForm EditContext="@EC">
         <DataAnnotationsValidator />
-
         <div class="form-group">
             <h5 for="exampleFormControlInput1">Name</h5>
             <InputText class="form-control" @bind-Value="@newBookRequest.Name" placeholder="Enter the book's name here." />
+            <ValidationMessage For="@(()=>newBookRequest.Name)" />
         </div>
-        <ValidationMessage For="@(()=>newBookRequest.Name)" />
+        
         <div class="form-group mt-3">
+
             <h5 for="exampleFormControlInput1">Author's Name</h5>
             <InputText type="email" class="form-control" @bind-Value="@newBookRequest.AuthorName" placeholder="Enter the book's author name here." />
+            <ValidationMessage For="@(()=>newBookRequest.AuthorName)" />
         </div>
-        <ValidationMessage For="@(()=>newBookRequest.AuthorName)" />
+        
         <div class="form-group mt-3">
             <h5 for="exampleFormControlTextarea1">Description</h5>
-            <InputTextArea class="form-control text-area-no-resize" @bind-Value="@newBookRequest.Description" rows="5" />
+            <InputTextArea class="form-control text-area-no-resize" @bind-Value="@newBookRequest.Description" rows="3" />
+            <ValidationMessage For="@(()=>newBookRequest.Description)" />
         </div>
-        <ValidationMessage For="@(()=>newBookRequest.Description)" />
+        
     </EditForm>
 </div>
 

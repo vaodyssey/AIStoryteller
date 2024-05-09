@@ -17,12 +17,12 @@
         <div class="carousel-inner">
             <div class="carousel-item active">
                 <div class="container mt-2">
-                    <div class="row">                   
+                    <div class="row">
                         <div class="col-lg-10 col-sm-10 col-md-10 gx-0">
                             <div class="container">
                                 <div class="row">
                                     <div class="col-lg-1 upload-icon">
-                                        <div class="fas fa-book fa-2xl"></div>
+                                        <div class="fas fa-upload fa-2xl"></div>
                                     </div>
                                     <div class="col-lg-4 pt-1">
                                         <h2 class="my-0 gy-0">Upload a Book</h2>
@@ -93,6 +93,9 @@
     window.moveToNextSlide = () =>{
         $('#uploadStepsCarousel').carousel('next');
     }
+    window.showBookNotUploadedPopup = ()=>{
+        alert("You have not uploaded a book. Please try again.")
+    }
 </script>
 
 @code {
@@ -108,10 +111,14 @@
     {
         _newBookRequest = await _newBookDetailsRef.GetBookDetails();
         _bookTextData = await _uploadPdfFormRef.GetAddedBook();
-        if (_newBookRequest == null || _bookTextData == null)
+        if (_bookTextData == null)
         {
+            await JSRuntime.InvokeVoidAsync("showBookNotUploadedPopup");
             return;
         }
+
+        if (_newBookRequest == null) return;
+
         await JSRuntime.InvokeVoidAsync("moveToNextSlide");
         await BindBookTextDataToNewBookRequest();
         await HandleAudiobookConversionProcess();

@@ -6,38 +6,33 @@
 @using Microsoft.AspNetCore.SignalR.Client
 @using Microsoft.AspNetCore.Http.Connections
 @using AIStoryteller.Utils
+@inject IJSRuntime JSRuntime
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 
 
-
 <form class="needs-validation" novalidate>
-    @*@if (_selectedFile == null)
-    {*@
-        <label for="input-file" id="drop-area">
-            <InputFile accept="pdf/*" id="input-file" OnChange="OnBookChange" aria-describedby="uploadButton" hidden />
-            <div id="pdf-view" ondragover="event.preventDefault()">
-                <img src="favicon.png" />
-                <p class="mt-2">Drag and drop, or click here <br /> to upload the PDF file.</p>
-            </div>
-        </label>
-    @*}*@
-    @*else
-    {
-        <label class="d-block" id="drop-area" style="background-image: url('https://i.pinimg.com/564x/e3/2a/af/e32aaf37ee2f4ff6ff86cc94a959f494.jpg'); background-size: cover; background-position: center;">
-            <InputFile accept="pdf/*" id="input-file" OnChange="OnBookChange" aria-describedby="uploadButton" hidden />
-        </label>
-    }*@
-
+    <label for="input-file" id="drop-area" style="@inputFileStyle">
+        <InputFile accept="application/pdf" id="input-file" OnChange="OnBookChange" aria-describedby="uploadButton" hidden />
+        <div id="pdf-view">
+            @if (_selectedFile == null)
+            {
+                <img class="annotation-img" src="pdf.png" />
+                <p class="mt-2 annotation-text">Drag and drop, or click here <br /> to upload the PDF file.</p>
+            }
+        </div>
+    </label>
 
 </form>
-
-
 
 @code{
     private IBrowserFile _selectedFile;
     private byte[] _pdfFileByteArray;
     private string ThumbnailImg;
+    private string inputFileStyle = "  width: 20rem;height: 22rem;background: rgb(157,129,170);" +
+                "background: linear-gradient(103deg, rgba(157,129,170,0.42544940339417014) 26%, rgba(157,129,170,1) 100%);" +
+            "border-color: #bbb5ff;border-style: double;text-align: center;border-radius: 20px;align-items: center;padding: 80px 20px;" +
+            "justify-content: center;";
 
     public async Task<byte[]> GetAddedBook()
     {
@@ -53,6 +48,9 @@
     private async Task OnBookChange(InputFileChangeEventArgs e)
     {
         _selectedFile = e.GetMultipleFiles()[0];
+        inputFileStyle = $"width: 20rem;height: 22rem;background-image: url('https://i.pinimg.com/564x/e3/2a/af/e32aaf37ee2f4ff6ff86cc94a959f494.jpg');" +
+                $"border-color: #bbb5ff;border-style: double;text-align: center;border-radius: 20px;align-items: center;padding: 80px 20px;justify-content: center;";
+        //await JSRuntime.InvokeVoidAsync("loadPdfThumbnail");
 
     }
 }
