@@ -11,47 +11,72 @@
 @rendermode InteractiveServer
 
 
-<form class="needs-validation" novalidate>
-    <label for="input-file" id="drop-area" style="@inputFileStyle">
-        <InputFile accept="application/pdf" id="input-file" OnChange="OnBookChange" aria-describedby="uploadButton" hidden />
-        <div id="pdf-view">
-            @if (_selectedFile == null)
+<form class="needs-validation " novalidate>
+    <label for="input-file" class="drop-area @backgroundStyle">
+        <InputFile accept="application/pdf" id="input-file"
+                   @ondragenter="OnDragEnter"
+                   OnChange="OnBookChange" @ondragleave="OnDragLeave"
+                   @ondrop="OnDrop"
+                   aria-describedby="uploadButton" />
+        <div class="pdf-view @pdfIconAndTextStyle">
+            @if (_pdfFileByteArray == null)
             {
-                <img class="annotation-img" src="pdf.png" />
-                <p class="mt-2 annotation-text">Drag and drop, or click here <br /> to upload the PDF file.</p>
+                <img src="pdf.png" />
+                <p class="mt-2">Drag and drop, or click here <br /> to upload the PDF file.</p>
             }
         </div>
     </label>
 
 </form>
 
+<style>
+    .drop-area-drop-complete {
+        background-image: url('https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/3c097e07-ab69-4781-adcd-22c2d9af8902/dg4m826-d281ba37-4503-439f-a102-43c5696ffea5.png/v1/fill/w_1280,h_1280,q_80,strp/chibi_anya_by_wabisabiwonders_dg4m826-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzNjMDk3ZTA3LWFiNjktNDc4MS1hZGNkLTIyYzJkOWFmODkwMlwvZGc0bTgyNi1kMjgxYmEzNy00NTAzLTQzOWYtYTEwMi00M2M1Njk2ZmZlYTUucG5nIiwiaGVpZ2h0IjoiPD0xMjgwIiwid2lkdGgiOiI8PTEyODAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uud2F0ZXJtYXJrIl0sIndtayI6eyJwYXRoIjoiXC93bVwvM2MwOTdlMDctYWI2OS00NzgxLWFkY2QtMjJjMmQ5YWY4OTAyXC93YWJpc2FiaXdvbmRlcnMtNC5wbmciLCJvcGFjaXR5Ijo5NSwicHJvcG9ydGlvbnMiOjAuNDUsImdyYXZpdHkiOiJjZW50ZXIifX0.g_nWR2dFDzy8t4_qS-EmR_f0RpO4YNODas6_JCa182A');
+        background-size:20rem 22rem;
+    }
+    .pdf-view-drop-complete {
+        opacity: 0;
+    }
+</style>
+
 @code{
     private IBrowserFile _selectedFile;
     private byte[] _pdfFileByteArray;
     private string ThumbnailImg;
-    private string inputFileStyle = "  width: 20rem;height: 22rem;background: rgb(157,129,170);" +
-                "background: linear-gradient(103deg, rgba(157,129,170,0.42544940339417014) 26%, rgba(157,129,170,1) 100%);" +
-            "border-color: #bbb5ff;border-style: double;text-align: center;border-radius: 20px;align-items: center;padding: 80px 20px;" +
-            "justify-content: center;";
-
+    private string backgroundStyle = "drop-area-default-background";
+    private string pdfIconAndTextStyle = "pdf-view-default";
     public async Task<byte[]> GetAddedBook()
     {
         if (_selectedFile == null) return null;
-        var result = await FileConvertUtils.ConvertIBrowserFileToByteArray(_selectedFile);
-        return result;
+        return _pdfFileByteArray;
 
     }
-    private async Task OnBookDragOver()
+
+    void OnDragEnter(DragEventArgs e) { ApplyOnDragAndDropStyles(); }
+    void OnDragLeave(DragEventArgs e) { ResetStyles(); }
+    void OnDrop(DragEventArgs e)
     {
+        ResetStyles();
 
     }
+
     private async Task OnBookChange(InputFileChangeEventArgs e)
     {
         _selectedFile = e.GetMultipleFiles()[0];
-        inputFileStyle = $"width: 20rem;height: 22rem;background-image: url('https://i.pinimg.com/564x/e3/2a/af/e32aaf37ee2f4ff6ff86cc94a959f494.jpg');" +
-                $"border-color: #bbb5ff;border-style: double;text-align: center;border-radius: 20px;align-items: center;padding: 80px 20px;justify-content: center;";
-        //await JSRuntime.InvokeVoidAsync("loadPdfThumbnail");
-
+        _pdfFileByteArray = await FileConvertUtils.ConvertIBrowserFileToByteArray(_selectedFile);
+        ApplyDragAndDropCompleteStyles();
+    }
+    private void ApplyDragAndDropCompleteStyles()
+    {
+        backgroundStyle = "drop-area-drop-complete"; pdfIconAndTextStyle = "pdf-view-drop-complete";
+    }
+    private void ApplyOnDragAndDropStyles()
+    {
+        backgroundStyle = "drop-area-on-drag-enter"; pdfIconAndTextStyle = "pdf-view-on-hover";
+    }
+    private void ResetStyles()
+    {
+        backgroundStyle = "drop-area-default-background"; pdfIconAndTextStyle = "pdf-view-default";
     }
 }
 

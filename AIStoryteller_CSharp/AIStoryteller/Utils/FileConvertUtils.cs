@@ -1,5 +1,6 @@
 ﻿using AIStoryteller_Repository.Constants;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.Extensions.FileProviders;
 
 namespace AIStoryteller.Utils
 {
@@ -22,6 +23,12 @@ namespace AIStoryteller.Utils
                 var result = $"data:{mediaType};base64,{Convert.ToBase64String(data)}";
                 return result;
             });
+        }
+        public static async Task<byte[]> ConvertIFileInfoToByteArray(IFileInfo file)
+        {
+            using var memoryStream = new MemoryStream();
+            await file.CreateReadStream().CopyToAsync(memoryStream);
+            return memoryStream.ToArray();
         }
     }
 }

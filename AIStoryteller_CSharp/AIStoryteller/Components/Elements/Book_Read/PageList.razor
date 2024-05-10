@@ -8,15 +8,27 @@
 @inject NavigationManager NavManager
 <div class="container row gx-0">
     <div class="overflow-auto page-list-row-height">
-        @foreach (var pageResponse in _pageResponseList)
-        {
-            <div @onclick="()=>RefreshAudio(pageResponse)">
-                <PageItemInList PageResponse="@pageResponse"></PageItemInList>
-            </div>
 
+        @if (_pageResponseList.Count == 0)
+        {
+            <div class="d-flex align-items-center justify-content-center mt-5">
+                <LoadingIndicator></LoadingIndicator>
+            </div>
         }
+        else
+        {
+            
+            @foreach (var pageResponse in _pageResponseList)
+            {
+                <div @onclick="()=>RefreshAudio(pageResponse)">
+                    <PageItemInList PageResponse="@pageResponse"></PageItemInList>
+                </div>
+
+            }
+            
+        }
+
     </div>
-    
 </div>
 
 

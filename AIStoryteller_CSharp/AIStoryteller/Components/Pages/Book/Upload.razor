@@ -11,7 +11,7 @@
 @page "/book/upload"
 
 @rendermode InteractiveServer
-<article class="content mb-5 px-4">
+<article class="content mb-5 mx-5">
     <PageTitle>New Book</PageTitle>
     <div id="@carouselName" class="carousel slide" data-bs-ride="carousel" data-bs-wrap="true" data-bs-pause="false" data-bs-interval="false">
         <div class="carousel-inner">
@@ -44,12 +44,12 @@
                     </div>
 
                 </div>
-                <div class="container mt-3 gx-0">
+                <div class="container mt-3 gx-0 px-0">
                     <div class="row">
                         <div class="col-lg-4 col-md-4 col-sm-4">
                             <UploadPDFForm @ref="@_uploadPdfFormRef"></UploadPDFForm>
                         </div>
-                        <div class="col-lg-8 col-md-8 col-sm-8 ps-0 ">
+                        <div class="col-lg-7 col-md-8 col-sm-8 ps-0 ">
                             <NewBookDetails @ref="@_newBookDetailsRef"></NewBookDetails>
                         </div>
 
